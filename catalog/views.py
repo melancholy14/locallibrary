@@ -4,7 +4,7 @@ from django.shortcuts import render
 from catalog.models import Book, Author, BookInstance, Genre
 
 from django.views import generic
-# from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404
 
 def index(request):
   """ View function for home page of site."""
@@ -58,3 +58,17 @@ def book_detail_view(request, primary_key):
 
   return render(request, 'catalog/book_detail.html', context={'book': book})
 
+
+class AuthorListView(generic.ListView):
+  model = Author
+
+
+# class AuthorDetailView(generic.DetailView):
+#   model = Author
+
+
+def author_detail_view(request, pk):
+  author = get_object_or_404(Author, pk=pk)
+
+  return render(request, 'catalog/author_detail.html', context={'author': author})
+  
