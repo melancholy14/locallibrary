@@ -6,7 +6,7 @@ from catalog.models import Book, Author, BookInstance, Genre
 from django.views import generic
 from django.shortcuts import get_object_or_404
 
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 def index(request):
   """ View function for home page of site."""
@@ -88,5 +88,16 @@ class LoanedBooksbyUserListView(LoginRequiredMixin, generic.ListView):
 
   def get_queryset(self):
     return BookInstance.objects.filter(borrower=self.request.user).filter(status__exact='o')
+
+    
+class LoanedBooksByAllUserListView(PermissionRequiredMixin, generic.ListView):
+  model = BookInstance
+  template_name = 'catalog/bookinstance_list_all_borrowed.html'
+  paginate_by = 10
+
+  permission_required = 'catalog.can_mark_returned'
+
+  def get_queryset(self):
+    return BookInstance.objects.filter(status__exact='o')
 
     
